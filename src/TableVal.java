@@ -1,11 +1,12 @@
 // R7 code referred
-public class TableVal extends KeyItem<String> {
+public class TableVal extends KeyItem<Integer> {
 	
-	protected Boolean val;
+	protected int index;
+	protected String desc;
 	
-	public TableVal(String id, Boolean val){
-		super(id);
-		this.val = val;
+	public TableVal(int index,String desc){
+		super(index);
+		this.desc = desc;
 	}
 
 	public String toString(){

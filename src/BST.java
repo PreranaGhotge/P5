@@ -42,11 +42,11 @@ public class BST{
 			throw new BSTException("Inserting item with existing key!");
 	}
 
-	public TableVal retrieveItem(String key){
+	public TableVal retrieveItem(Integer key){
 		return retrieveItem(root,key);
 	}
 	
-	private TableVal retrieveItem(BSTNode<TableVal> node, String key){
+	private TableVal retrieveItem(BSTNode<TableVal> node, Integer key){
 		TableVal treeItem;
 		
 		if(node==null)

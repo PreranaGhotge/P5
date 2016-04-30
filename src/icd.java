@@ -17,7 +17,16 @@ public class icd {
 		createHashTable(filename);
 	}
 	
+	public String findQuery(String query) throws Exception {
+		long cksum = cksum(query);
+		int index = Math.abs((int) cksum%size);
+	}
+	
 	public void createHashTable(String filename) throws Exception {
+		hashTable = new BST[size];
+		for(int i=0;i<size;i++) {
+			hashTable[i] = null;
+		}
 		File file = new File(filename);
 		Scanner sc = new Scanner(file);
 		while(sc.hasNextLine()) {
@@ -25,8 +34,17 @@ public class icd {
 			String code = line.substring(6, 13);
 			long cksum = cksum(code);
 			int index = Math.abs((int) cksum%size);
-			
 			String desc = line.substring(77);
+			TableVal item = new TableVal(index,desc);
+			if(hashTable[index]==null) {
+				BST tree = new BST();
+				tree.insertItem(item);
+				hashTable[index]=tree;
+			}
+			else {
+				hashTable[index].insertItem(item);
+			}
+			
 		}
 		
 	}
@@ -50,6 +68,7 @@ public class icd {
 			}
 			int size = Integer.parseInt(args[1]);
 			icd icd = new icd(args[0],size,queries);
+			
 		}
 			
 		}
