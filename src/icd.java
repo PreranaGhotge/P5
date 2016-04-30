@@ -2,20 +2,14 @@ import java.util.zip.CRC32;
 import java.util.zip.Checksum;
 import java.io.File;
 import java.util.Scanner;
-import java.util.ArrayList;
-import java.io.LineNumberReader;
-import java.io.FileReader;
 import java.io.IOException;
 
 public class icd {
 	
 	private int size;
-	private String filename;
-	private ArrayList<String> queries;
 	private BST[] hashTable;
 	
 	public icd(String filename,int size) throws Exception {
-		this.filename = filename;
 		this.size = size;
 		createHashTable(filename);
 	}
@@ -23,12 +17,18 @@ public class icd {
 	public void findQuery(String query) throws Exception {
 		long cksum = cksum(query);
 		int index = Math.abs((int) cksum%size);
-		TableVal soln = hashTable[index].retrieveItem(cksum);
+		TableVal soln;
+		if(hashTable[index]!=null) {
+			soln = hashTable[index].retrieveItem(cksum);
+		}
+		else {
+			soln = null;
+		}
 		if(soln==null) {
 			System.out.println(query+": "+"code not found");
 		}
 		else {
-		System.out.println(query+": "+soln);
+			System.out.println(query+": "+soln);
 		}
 	}
 	
@@ -37,32 +37,43 @@ public class icd {
 		for(int i=0;i<size;i++) {
 			hashTable[i] = null;
 		}
-		File file = new File(filename);
+		Scanner sc = null;
 		try{
-		Scanner sc = new Scanner(file);
-		while(sc.hasNextLine()) {
-			String line = sc.nextLine();
-			String code = line.substring(6, 13).trim();
-			long cksum = cksum(code);
-			int index = Math.abs((int) cksum%size);
-			String desc = line.substring(77);
-			TableVal item = new TableVal(cksum,desc);
-			if(hashTable[index]==null) {
-				BST tree = new BST();
-				tree.insertItem(item);
-				hashTable[index]=tree;
+			File file = new File(filename);
+			sc = new Scanner(file);
+			if(!(sc.hasNext())) {
+				throw new Exception("File empty!");
 			}
-			else {
-				hashTable[index].insertItem(item);
+			while(sc.hasNextLine()) {
+				String line = sc.nextLine();
+				String code = line.substring(6, 13).trim();
+				long cksum = cksum(code);
+				int index = Math.abs((int) cksum%size);
+				String desc = line.substring(77);
+				TableVal item = new TableVal(cksum,desc);
+				if(hashTable[index]==null) {
+					BST tree = new BST();
+					tree.insertItem(item);
+					hashTable[index]=tree;
+				}
+				else {
+					hashTable[index].insertItem(item);
+				}
+
 			}
-			
-		}
-		sc.close();
 		}
 		catch(IOException e) {
-			System.out.println("IOException caught");
+			throw new IOException("Bad filename/File not found!");
 		}
-		
+		/*catch(IOException e) {
+			throw new IOException("Bad filename");
+		}*/
+		finally {
+			if(sc!=null) {
+				sc.close();
+			}
+		}
+
 	}
 	
 	public static long cksum(String s) throws Exception{
@@ -74,7 +85,7 @@ public class icd {
 	
 	public static void main(String[] args) throws Exception {
 		if (args.length < 3) {
-			throw new Exception("specify filename,hash table size,one or more code queries");
+			throw new Exception("Bad arguments: specify filename,hash table size,one or more code queries");
 		}
 		else {
 			int size = Integer.parseInt(args[1]);
@@ -84,12 +95,8 @@ public class icd {
 				icd.findQuery(args[i]);
 				i++;
 			}
-
-
 		}
 
 	}
-
-	
 
 }
