@@ -9,8 +9,9 @@ public class TableVal extends KeyItem<Long> {
 		this.desc = desc;
 	}
 
+	@Override
 	public String toString(){
-		return "[" + getKey() + ": " + val+ "]"; 
+		return desc; 
 	}
 	
 }

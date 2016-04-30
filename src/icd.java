@@ -5,6 +5,7 @@ import java.util.Scanner;
 import java.util.ArrayList;
 import java.io.LineNumberReader;
 import java.io.FileReader;
+import java.io.IOException;
 
 public class icd {
 	
@@ -27,7 +28,7 @@ public class icd {
 			System.out.println(query+": "+"code not found");
 		}
 		else {
-		System.out.println(query+": "+soln.desc);
+		System.out.println(query+": "+soln);
 		}
 	}
 	
@@ -37,19 +38,11 @@ public class icd {
 			hashTable[i] = null;
 		}
 		File file = new File(filename);
-		/*int count=0;
-		//check this part
-		LineNumberReader reader = new LineNumberReader(new FileReader(filename));
-		while ((reader.readLine()) != null) {
-        count = count+reader.getLineNumber();
-		}
-		if(reader!=null) {
-			reader.close();
-		}*/
+		try{
 		Scanner sc = new Scanner(file);
 		while(sc.hasNextLine()) {
 			String line = sc.nextLine();
-			String code = line.substring(6, 13);
+			String code = line.substring(6, 13).trim();
 			long cksum = cksum(code);
 			int index = Math.abs((int) cksum%size);
 			String desc = line.substring(77);
@@ -63,6 +56,11 @@ public class icd {
 				hashTable[index].insertItem(item);
 			}
 			
+		}
+		sc.close();
+		}
+		catch(IOException e) {
+			System.out.println("IOException caught");
 		}
 		
 	}
@@ -79,11 +77,6 @@ public class icd {
 			throw new Exception("specify filename,hash table size,one or more code queries");
 		}
 		else {
-			/*ArrayList<String> queries = new ArrayList<String>();
-			int i=2;
-			while(i<args.length) {
-				queries.add(args[i]);
-			}*/
 			int size = Integer.parseInt(args[1]);
 			icd icd = new icd(args[0],size);
 			int i=2;
