@@ -1,11 +1,11 @@
 // R7 code referred
-public class TableVal extends KeyItem<Integer> {
+public class TableVal extends KeyItem<Long> {
 	
-	protected int index;
+	protected long cksum;
 	protected String desc;
 	
-	public TableVal(int index,String desc){
-		super(index);
+	public TableVal(long cksum,String desc){
+		super(cksum);
 		this.desc = desc;
 	}
 

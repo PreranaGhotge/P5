@@ -3,6 +3,8 @@ import java.util.zip.Checksum;
 import java.io.File;
 import java.util.Scanner;
 import java.util.ArrayList;
+import java.io.LineNumberReader;
+import java.io.FileReader;
 
 public class icd {
 	
@@ -11,15 +13,22 @@ public class icd {
 	private ArrayList<String> queries;
 	private BST[] hashTable;
 	
-	public icd(String filename,int size,ArrayList<String> queries) throws Exception {
+	public icd(String filename,int size) throws Exception {
 		this.filename = filename;
 		this.size = size;
 		createHashTable(filename);
 	}
 	
-	public String findQuery(String query) throws Exception {
+	public void findQuery(String query) throws Exception {
 		long cksum = cksum(query);
 		int index = Math.abs((int) cksum%size);
+		TableVal soln = hashTable[index].retrieveItem(cksum);
+		if(soln==null) {
+			System.out.println(query+": "+"code not found");
+		}
+		else {
+		System.out.println(query+": "+soln.desc);
+		}
 	}
 	
 	public void createHashTable(String filename) throws Exception {
@@ -28,6 +37,15 @@ public class icd {
 			hashTable[i] = null;
 		}
 		File file = new File(filename);
+		/*int count=0;
+		//check this part
+		LineNumberReader reader = new LineNumberReader(new FileReader(filename));
+		while ((reader.readLine()) != null) {
+        count = count+reader.getLineNumber();
+		}
+		if(reader!=null) {
+			reader.close();
+		}*/
 		Scanner sc = new Scanner(file);
 		while(sc.hasNextLine()) {
 			String line = sc.nextLine();
@@ -35,7 +53,7 @@ public class icd {
 			long cksum = cksum(code);
 			int index = Math.abs((int) cksum%size);
 			String desc = line.substring(77);
-			TableVal item = new TableVal(index,desc);
+			TableVal item = new TableVal(cksum,desc);
 			if(hashTable[index]==null) {
 				BST tree = new BST();
 				tree.insertItem(item);
@@ -58,20 +76,26 @@ public class icd {
 	
 	public static void main(String[] args) throws Exception {
 		if (args.length < 3) {
-		    throw new Exception("specify filename,hash table size,one or more code queries");
-	}
+			throw new Exception("specify filename,hash table size,one or more code queries");
+		}
 		else {
-			ArrayList<String> queries = new ArrayList<String>();
+			/*ArrayList<String> queries = new ArrayList<String>();
 			int i=2;
 			while(i<args.length) {
 				queries.add(args[i]);
-			}
+			}*/
 			int size = Integer.parseInt(args[1]);
-			icd icd = new icd(args[0],size,queries);
-			
+			icd icd = new icd(args[0],size);
+			int i=2;
+			while(i<args.length) {
+				icd.findQuery(args[i]);
+				i++;
+			}
+
+
 		}
-			
-		}
+
+	}
 
 	
 
