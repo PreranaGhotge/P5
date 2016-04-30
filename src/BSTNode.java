@@ -41,4 +41,3 @@ public class BSTNode<Comparable> {
 			return "BST internal: " + item;
 	}	
 }
-

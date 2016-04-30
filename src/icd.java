@@ -9,20 +9,22 @@ public class icd {
 	private int size;
 	private String filename;
 	private ArrayList<String> queries;
+	private BST[] hashTable;
 	
-	public icd(String filename,int size,ArrayList<String> queries) {
-		this.filename = args[0];
-		this.size = args[1];
-		readFile(filename);
+	public icd(String filename,int size,ArrayList<String> queries) throws Exception {
+		this.filename = filename;
+		this.size = size;
+		createHashTable(filename);
 	}
 	
-	public void readFile(String filename) {
+	public void createHashTable(String filename) throws Exception {
 		File file = new File(filename);
 		Scanner sc = new Scanner(file);
 		while(sc.hasNextLine()) {
 			String line = sc.nextLine();
-			String query = line.substring(6, 13);
-			long cksum = cksum(query);
+			String code = line.substring(6, 13);
+			long cksum = cksum(code);
+			int index = Math.abs((int) cksum%size);
 			
 			String desc = line.substring(77);
 		}
