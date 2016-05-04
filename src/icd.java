@@ -42,7 +42,7 @@ public class icd {
 			File file = new File(filename);
 			sc = new Scanner(file);
 			if(!(sc.hasNext())) {
-				System.err.println("File empty!");
+				System.out.println("File empty!");
 			}
 			while(sc.hasNextLine()) {
 				String line = sc.nextLine();
@@ -65,9 +65,7 @@ public class icd {
 		catch(IOException e) {
 			throw new IOException("Bad filename/File not found!");
 		}
-		/*catch(IOException e) {
-			throw new IOException("Bad filename");
-		}*/
+		
 		finally {
 			if(sc!=null) {
 				sc.close();
