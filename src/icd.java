@@ -14,7 +14,7 @@ public class icd {
 		createHashTable(filename);
 	}
 	
-	public void findQuery(String query) throws Exception {
+	public void findQuery(String query) {
 		long cksum = cksum(query);
 		int index = Math.abs((int) cksum%size);
 		TableVal soln;
@@ -42,7 +42,7 @@ public class icd {
 			File file = new File(filename);
 			sc = new Scanner(file);
 			if(!(sc.hasNext())) {
-				throw new Exception("File empty!");
+				System.err.println("File empty!");
 			}
 			while(sc.hasNextLine()) {
 				String line = sc.nextLine();
@@ -76,7 +76,7 @@ public class icd {
 
 	}
 	
-	public static long cksum(String s) throws Exception{
+	public static long cksum(String s) {
         Checksum engine = new CRC32();
         byte[] bytes = s.getBytes();
         engine.update(bytes, 0, bytes.length);
@@ -85,7 +85,7 @@ public class icd {
 	
 	public static void main(String[] args) throws Exception {
 		if (args.length < 3) {
-			throw new Exception("Bad arguments: specify filename,hash table size,one or more code queries");
+			System.err.println("Bad arguments: specify filename,hash table size,one or more code queries");
 		}
 		else {
 			int size = Integer.parseInt(args[1]);
